@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [12.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run build
-      - run: test:lint
-      - run: test:unit
-      - run: test:e2e
-      - run: test:e2e:allure
+      - run: npm run test:lint
+      - run: npm run test:unit
+      - run: npm run test:e2e
+      - run: npm run test:e2e:allure
