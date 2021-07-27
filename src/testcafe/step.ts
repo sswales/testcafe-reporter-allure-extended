@@ -46,7 +46,7 @@ export class TestStep {
     meta.steps.push(this);
   }
 
-  // Using the Testcontroller type might cause an error because of a confict with TestCafé's TestController
+  // Using the Testcontroller type might cause an error because of a confict with TestCafe's TestController
   private getMeta(testController: any): any {
     let { meta } = testController.testRun.test;
     if (!meta) {

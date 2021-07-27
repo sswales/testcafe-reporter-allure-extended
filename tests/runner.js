@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
-import createTestCafe from 'testcafe';
-/* eslint-disable-next-line import/no-unresolved */
-import * as allureReporter from '../dist/index.js';
+const createTestCafe = require('testcafe');
+/* eslint-disable-next-line import/no-unresolved, import/extensions */
+const allureReporter = require('../dist');
+/* eslint-disable-next-line import/no-unresolved, import/extensions */
+const { reporterConfig } = require('../dist/utils');
 
 let testcafe = null;
 
@@ -15,13 +17,22 @@ createTestCafe()
       .src(['tests/e2e/*.ts'])
       .browsers(browsers)
       .reporter(allureReporter)
-      .tsConfigPath('tsconfig.test.json');
+      .compilerOptions({ typescript: { configPath: 'tsconfig.test.json' } })
+      .screenshots({
+        path: reporterConfig.SCREENSHOT_DIR,
+        takeOnFails: true,
+      })
+      .concurrency(reporterConfig.CONCURRENCY)
+      .run({
+        quarantineMode: reporterConfig.ENABLE_QUARANTINE,
+        disableScreenshots: !reporterConfig.ENABLE_SCREENSHOTS,
+      });
   })
   .then((failed) => {
     testcafe.close();
 
     if (failed > 0) {
-      throw new Error(`TestCafé tests failed: ${failed}`);
+      throw new Error(`TestCafe tests failed: ${failed}`);
     }
   })
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */

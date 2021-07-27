@@ -36,7 +36,6 @@ export interface TestRunInfo {
   unstable?: boolean;
   screenshotPath?: string;
   screenshots?: Screenshot[];
-  browsers?: Browser[];
   quarantine?: object;
   skipped?: boolean;
 }
@@ -45,32 +44,6 @@ export interface ErrorObject {
   errMsg?: string;
   callsite?: CallSite;
   userAgent?: string;
-}
-
-export interface TestError {
-  title?: string;
-  errMsg?: string;
-  screenshotPath?: string;
-  userAgent?: string;
-  code?: string;
-  trace?: Array<Object>;
-  pretty?: string;
-  testRunPhase?: string;
-  isTestCafeError?: boolean;
-  callsite?: CallSite;
-}
-
-export interface Browser {
-  testRunId?: string;
-  name?: string;
-  version?: string;
-  platform?: string;
-  os?: any;
-  engine?: any;
-  prettyUserAgent?: string;
-  userAgent?: string;
-  alias?: string;
-  headless?: boolean;
 }
 
 export interface CallSite {

@@ -1,5 +1,5 @@
 import { Category, Status } from 'allure-js-commons';
-import { merge } from 'merge-anything';
+import { defaultsDeep } from 'lodash';
 import * as path from 'path';
 
 const defaultReporterConfig = {
@@ -21,13 +21,10 @@ const defaultReporterConfig = {
 
   META: {
     SEVERITY: 'Normal',
-    PRIORITY: 'Medium',
-    JIRA_URL: 'https://jira.example.nl/browse/',
+    ISSUE_URL: 'https://jira.example.nl/browse/',
   },
   LABEL: {
-    ISSUE: 'JIRA Test Case',
-    EPIC: 'JIRA Epic',
-    STORY: 'JIRA User Story',
+    ISSUE: 'JIRA Issue',
     FLAKY: 'Flaky test',
     SCREENSHOT_MANUAL: 'Screenshot taken manually',
     SCREENSHOT_ON_FAIL: 'Screenshot taken on fail',
@@ -75,7 +72,7 @@ function loadCustomConfig(configFile: string): object {
 
 export function loadReporterConfig(): any {
   const customConfig = loadCustomConfig(defaultReporterConfig.REPORTER_CONFIG_FILE);
-  const mergedConfig: object = merge(defaultReporterConfig, customConfig);
+  const mergedConfig: object = defaultsDeep(customConfig, defaultReporterConfig);
   return mergedConfig;
 }
 

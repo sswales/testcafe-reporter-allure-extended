@@ -1,45 +1,50 @@
 {
   "name": "testcafe-reporter-allure-extended",
-  "type": "module",
-  "version": "1.0.0",
-  "author": "Shaun Swales <info@swalesconsultancy.co.uk>",
+  "version": "1.0.3",
+  "author": "Shaun Swales",
   "license": "MIT",
   "description": "An Allure reporter plugin for TestCafe. Used to generate test reports for e2e-tests.",
+  "engines": {
+    "node": ">=12"
+  },
   "keywords": [
-    "testcafe",
+    "TestCafe",
     "allure",
-    "reporter"
+    "integration"
   ],
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sswales/testcafe-reporter-allure-extended.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sswales/testcafe-reporter-allure-extended/issues"
+  },
+  "homepage": "https://github.com/sswales/testcafe-reporter-allure#readme",
   "scripts": {
-    "setup": "yarn install --frozen-lockfile",
-    "upgrade:packages": "yarn upgrade-interactive --latest",
     "prebuild": "rimraf dist",
     "build": "rollup -c",
-    "test": "npm run test:lint && npm run test:unit && npm run test:e2e",
-    "test:lint": "eslint --ext .js,.ts --ignore-pattern !.* --ignore-path .gitignore .",
-    "test:lint:fix": "eslint --ext .js,.ts --ignore-pattern !.* --ignore-path .gitignore . --fix",
-    "test:unit": "jest",
-    "test:unit:watch": "jest --config=jest.config.js --watch",
-    "pretest:e2e": "npm run build",
+    "test": "run-s test:*",
+    "test:lint": "eslint --ext .js,.ts --ignore-pattern !.* --ignore-path .gitignore . --fix",
+    "test:unit": "jest --selectProjects unit",
     "test:e2e": "node tests/runner.js",
-    "test:e2e:allure": "npm run test:e2e && npm run allure",
+    "test:integration": "jest --selectProjects integration",
     "allure": "allure generate ./allure/allure-results --clean -o ./allure/allure-report && allure open ./allure/allure-report",
     "version": "node -v",
     "browsers": "testcafe --list-browsers",
     "semantic-release": "semantic-release",
-    "pack:contents": "npm pack && tar -xvzf *.tgz && rm -rf package *.tgz"
+    "pack:contents": "npm pack && tar -xvzf *.tgz && rm -rf package *.tgz",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   },
   "files": [
     "dist/*"
   ],
   "dependencies": {
-    "allure-commandline": "^2.13.8",
     "allure-js-commons": "^2.0.0-beta.8",
-    "merge-anything": "^4.0.0",
+    "lodash": "^4.17.21",
     "rimraf": "^3.0.2",
-    "strip-ansi": "^7.0.0",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@commitlint/cli": "13.1.0",
@@ -50,11 +55,13 @@
     "@semantic-release/git": "9.0.0",
     "@semantic-release/npm": "7.1.3",
     "@semantic-release/release-notes-generator": "9.0.3",
+    "@types/fs-extra": "9.0.12",
     "@types/jest": "26.0.24",
     "@types/rimraf": "3.0.1",
     "@types/uuid": "8.3.1",
-    "@typescript-eslint/eslint-plugin": "4.28.5",
-    "@typescript-eslint/parser": "4.28.5",
+    "@typescript-eslint/eslint-plugin": "4.28.4",
+    "@typescript-eslint/parser": "4.28.4",
+    "allure-commandline": "2.13.8",
     "callsite-record": "4.1.3",
     "eslint": "7.31.0",
     "eslint-config-airbnb-typescript": "12.3.1",
@@ -62,23 +69,20 @@
     "eslint-plugin-import": "2.23.4",
     "eslint-plugin-jest": "24.4.0",
     "eslint-plugin-prettier": "3.4.0",
+    "fs-extra": "10.0.0",
+    "globby": "11.0.4",
     "husky": "7.0.1",
     "jest": "27.0.6",
     "lint-staged": "11.1.1",
-    "normalize-newline": "4.1.0",
+    "normalize-newline": "3.0.0",
+    "npm-run-all": "4.1.5",
     "prettier": "2.3.2",
     "rollup": "2.54.0",
     "rollup-plugin-typescript2": "0.30.0",
     "semantic-release": "17.4.4",
     "testcafe": "1.15.0",
     "ts-jest": "27.0.4",
-    "typescript": "4.3.5"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/sswales/testcafe-reporter-allure-extended.git"
-  },
-  "bugs": {
-    "url": "https://github.com/sswales/testcafe-reporter-allure-extended/issues"
+    "typescript": "4.3.5",
+    "vuepress": "1.8.2"
   }
 }

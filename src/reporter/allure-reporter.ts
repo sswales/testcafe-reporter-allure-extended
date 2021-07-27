@@ -13,26 +13,23 @@ import {
 } from 'allure-js-commons';
 import { v4 as uuid } from 'uuid';
 import * as fs from 'fs';
-import stripAnsi from 'strip-ansi';
-import { ErrorObject, Screenshot, TestError, TestRunInfo } from '../testcafe/models';
+import { ErrorObject, Screenshot, TestRunInfo } from '../testcafe/models';
 import { TestStep } from '../testcafe/step';
 import { loadCategoriesConfig, loadReporterConfig } from '../utils/config';
 import addNewLine from '../utils/utils';
 import Metadata from './metadata';
-import { ErrorConfig } from './models';
 
 const reporterConfig = loadReporterConfig();
 const categoriesConfig: Category[] = loadCategoriesConfig();
-// const stripAnsi = require("strip-ansi");
 
 export default class AllureReporter {
   private runtime: AllureRuntime = null;
 
   private userAgents: string[] = null;
 
-  /* TestCafé does not run the groups concurrently when running the tests concurrently and will end the tests sequentially based on their group/fixture.
+  /* TestCafe does not run the groups concurrently when running the tests concurrently and will end the tests sequentially based on their group/fixture.
   This allows for only a single group and group meta to be stored at once.
-  Saving them in the same way as the tests is also not possible because TestCafé does not call the reporter when a group has ended it is, therefore, not possible to end the groups based on their name. */
+  Saving them in the same way as the tests is also not possible because TestCafe does not call the reporter when a group has ended it is, therefore, not possible to end the groups based on their name. */
   private group: AllureGroup = null;
 
   private groupMetadata: Metadata;
@@ -57,7 +54,7 @@ export default class AllureReporter {
     // Best to call this function in reporterTaskEnd and to write it as the last thing.
     this.runtime.writeCategoriesDefinitions(categoriesConfig);
     if (this.userAgents) {
-      this.runtime.writeEnvironmentInfo({ Browsers: this.userAgents.toString() });
+      this.runtime.writeEnvironmentInfo({ browsers: this.userAgents.toString() });
     }
   }
 
@@ -88,8 +85,7 @@ export default class AllureReporter {
     this.setCurrentTest(name, currentTest);
   }
 
-  public endTest(name: string, testRunInfo: TestRunInfo, meta: object, context: any): void {
-    const _this = this;
+  public endTest(name: string, testRunInfo: TestRunInfo, meta: object): void {
     let currentTest = this.getCurrentTest(name);
 
     // If no currentTest exists create a new one
@@ -97,7 +93,7 @@ export default class AllureReporter {
       this.startTest(name, meta);
       currentTest = this.getCurrentTest(name);
     }
-    const currentMetadata = new Metadata(meta, true);
+
     const hasErrors = !!testRunInfo.errs && !!testRunInfo.errs.length;
     const hasWarnings = !!testRunInfo.warnings && !!testRunInfo.warnings.length;
     const isSkipped = testRunInfo.skipped;
@@ -105,61 +101,44 @@ export default class AllureReporter {
     let testMessages: string = '';
     let testDetails: string = '';
 
-    // Adding userAgent to Test
-    currentMetadata.addDescription('<br/><strong>User Agent:</strong> ');
-    testRunInfo.browsers.forEach((browser) => {
-      currentMetadata.addDescription(browser.prettyUserAgent);
-      currentMetadata.addOtherMeta('browser', browser.prettyUserAgent);
-    });
-
     if (isSkipped) {
       currentTest.status = Status.SKIPPED;
     } else if (hasErrors) {
-      const testErrors: Array<TestError> = [];
-      testRunInfo.errs.forEach((err) => {
-        const errorFormatted = context.formatError(err);
-        const error = this.formatErrorObject(stripAnsi(errorFormatted));
-        const tError: TestError = err;
-        tError.title = `${error.errorName}: ${error.errorMessage}`;
-        tError.pretty = error.pretty;
-        testErrors.push(tError);
-      });
-
       currentTest.status = Status.FAILED;
 
-      const mergedErrors = this.mergeErrors(testErrors);
+      const mergedErrors = this.mergeErrors(testRunInfo.errs);
 
-      mergedErrors.forEach((error: TestError) => {
-        if (error.title) {
-          testMessages = addNewLine(testMessages, error.code ? `${error.code} - ${error.title}` : error.title);
+      mergedErrors.forEach((error: ErrorObject) => {
+        if (error.errMsg) {
+          testMessages = addNewLine(testMessages, error.errMsg);
         }
 
-        if (error.pretty) {
-          testDetails = addNewLine(testDetails, error.pretty);
-        } else {
-          if (error.callsite) {
-            if (error.callsite.filename) {
-              testDetails = addNewLine(testDetails, `File name: ${error.callsite.filename}`);
-            }
-            if (error.callsite.lineNum) {
-              testDetails = addNewLine(testDetails, `Line number: ${error.callsite.lineNum}`);
-            }
+        // TODO: Add detailed error stacktrace
+        // How to convert CallSiteRecord to stacktrace?
+        const callSite = error.callsite;
+        if (callSite) {
+          if (callSite.filename) {
+            testDetails = addNewLine(testDetails, `File name: ${callSite.filename}`);
           }
-          if (error.userAgent) {
-            testDetails = addNewLine(testDetails, `User Agent(s): ${error.userAgent}`);
+          if (callSite.lineNum) {
+            testDetails = addNewLine(testDetails, `Line number: ${callSite.lineNum}`);
           }
+        }
+        if (error.userAgent) {
+          testDetails = addNewLine(testDetails, `User Agent(s): ${error.userAgent}`);
         }
       });
     } else {
       currentTest.status = Status.PASSED;
     }
 
-    // if (hasWarnings) {
-    testRunInfo.warnings.forEach((warning: string) => {
-      testMessages = addNewLine(testMessages, warning);
-    });
-    // }
+    if (hasWarnings) {
+      testRunInfo.warnings.forEach((warning: string) => {
+        testMessages = addNewLine(testMessages, warning);
+      });
+    }
 
+    const currentMetadata = new Metadata(meta, true);
     if (testRunInfo.unstable) {
       currentMetadata.setFlaky();
     }
@@ -183,7 +162,7 @@ export default class AllureReporter {
   }
 
   /* To add the screenshots to the correct test steps they have to be loaded from testRunInfo.screenshots.
-  Because of how the screenshots are registered within TestCafé the only data the TestStep has via the metadata is the amount
+  Because of how the screenshots are registered within TestCafe the only data the TestStep has via the metadata is the amount
   of screenshots taken an no reference to which screeshot was taken.
   However because both the screenshots and the TestSteps are saved chronologically it can be determined what screenshots are part
   each TestStep by keeping an index of the current screenshot and the number of screenshots taken per TestStep and looping through them. */
@@ -198,7 +177,7 @@ export default class AllureReporter {
       const testStep: TestStep = mergedSteps[i];
       const allureStep: AllureStep = test.startStep(testStep.name);
 
-      if (testStep.screenshotAmount && testStep.screenshotAmount > 0) {
+      if (testRunInfo && testStep.screenshotAmount && testStep.screenshotAmount > 0) {
         for (let j = 0; j < testStep.screenshotAmount; j += 1) {
           const screenshot: Screenshot = testRunInfo.screenshots[screenshotIndex];
 
@@ -208,7 +187,7 @@ export default class AllureReporter {
         }
       }
 
-      /* Steps do not record the state they finished because this data is not available from TestCafé.
+      /* Steps do not record the state they finished because this data is not available from TestCafe.
       If a step is not last it can be assumed that the step was successfull because otherwise the test would of stopped earlier.
       If a step is last the status from the test itself should be copied. */
       if (i === stepLastIndex) {
@@ -269,13 +248,13 @@ export default class AllureReporter {
   }
 
   /* Merge the errors together based on their message. */
-  private mergeErrors(errors: TestError[]): TestError[] {
-    const mergedErrors: TestError[] = [];
+  private mergeErrors(errors: ErrorObject[]): ErrorObject[] {
+    const mergedErrors: ErrorObject[] = [];
     errors.forEach((error) => {
-      if (error && error.title) {
+      if (error && error.errMsg) {
         let errorExists: boolean = false;
         mergedErrors.forEach((mergedError) => {
-          if (error.title === mergedError.title) {
+          if (error.errMsg === mergedError.errMsg) {
             errorExists = true;
             if (error.userAgent && mergedError.userAgent !== error.userAgent) {
               /* eslint-disable-next-line no-param-reassign */
@@ -299,23 +278,6 @@ export default class AllureReporter {
       }
     }
     return null;
-  }
-
-  private formatErrorObject(errorText: string) {
-    let errorMessage = '';
-    let errorName = '';
-
-    if (errorText.indexOf(ErrorConfig.ASSERTION_ERROR) !== -1) {
-      errorName = ErrorConfig.ASSERTION_ERROR;
-      errorMessage = errorText.substring(ErrorConfig.ASSERTION_ERROR.length + 2, errorText.indexOf('\n\n'));
-    } else if (errorText.indexOf(ErrorConfig.BEFORE_HOOK) !== -1) {
-      errorName = ErrorConfig.BEFORE_HOOK;
-      errorMessage = errorText.substring(ErrorConfig.BEFORE_HOOK.length, errorText.indexOf('\n\n'));
-    } else {
-      errorName = ErrorConfig.UNHANDLED_EXCEPTION;
-      errorMessage = errorText.substring(0, errorText.indexOf('\n\n'));
-    }
-    return { errorName, errorMessage, pretty: errorText.substring(errorText.indexOf('\n\n')) };
   }
 
   private setCurrentTest(name: string, test: AllureTest): void {
