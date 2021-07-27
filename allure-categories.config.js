@@ -23,6 +23,9 @@ module.exports = [
     matchedStatuses: ['passed', 'failed'],
     messageRegex: '.*Flaky.*',
   },
+
+  // Custom categories
+  // https://github.com/sswales/testcafe-reporter-allure/issues/45
   {
     name: 'Selector Not Found',
     traceRegex: '.*selector does not match any.*',

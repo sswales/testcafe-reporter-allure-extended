@@ -6,13 +6,13 @@ There are multiple ways you can help improve this package: Reporting bug, sugges
 
 ## Reporting bugs
 
-Before submitting a bug request, please check if this bug has already been reported by checking the existing [issues](https://github.com/sswales/testcafe-reporter-allure-extended/labels/bug).
+Before submitting a bug request, please check if this bug has already been reported by checking the existing [issues](https://github.com/sswales/testcafe-reporter-allure/labels/bug).
 
 Please adhere to the Bug Report template provided in the repository when creating a new issue. This will help us with organizing, reproducing, and ultimately solving the bug.
 
 ## Suggesting features
 
-Before submitting a feature suggestion, please check if this feature has already been suggested by checking the existing [issues](https://github.com/sswales/testcafe-reporter-allure-extended/labels/feature).
+Before submitting a feature suggestion, please check if this feature has already been suggested by checking the existing [issues](https://github.com/sswales/testcafe-reporter-allure/labels/feature).
 
 Please adhere to the Feature Request template provided in the repository when creating a new issue. This will help us in organizing, prioritizing, and implementing new features. 
 
@@ -33,6 +33,7 @@ To ensure a smooth code review and merging process please check if the Pull Requ
 - The GitHub Action pipeline concludes successfully:
   - The code follows the style guide used within this project. This can be tested locally by running: `npm run test:lint`.
   - The code passes all unit tests. This can be tested locally by running: `npm run test:unit`.
-- The change does not break the example e2e tests. This can be tested locally by running `npm run test:e2e:allure`.
+- The change does not break the example e2e tests. This can be tested locally by running `npm run test:e2e`. After running e2e tests, `allure` directory will have `allure-results` that can be used to see example allure report. Please run `npm run allure` and check how final report will look like
+- The change pass integration tests that should be run only after e2e tests passed. This can be tested locally by running `npm run test:e2e`, then after e2e finished run `npm run test:integration`
 
 You may merge the Pull Request in once you have the sign-off of two other developers, or if you do not have permission to do that, you may request the second reviewer to merge it for you.

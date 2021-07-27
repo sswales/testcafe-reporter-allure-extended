@@ -5,7 +5,7 @@ const TIER2 = { tier2: 'true' };
 const SMOKE = { type: 'smoke' };
 const OWNERS = { owner: 'team' };
 
-fixture('TestCafé Example Fixture - Main').page('http://devexpress.github.io/testcafe/example').meta({
+fixture('TestCafe Example Fixture - Main').page('http://devexpress.github.io/testcafe/example').meta({
   epic: 'Example Epic Ticket',
   suite: 'Example Fixture Group',
 });
@@ -70,7 +70,7 @@ test.meta({
   );
 });
 
-fixture('TestCafé Example Fixture - Flaky Tests')
+fixture('TestCafe Example Fixture - Flaky Tests')
   .page('http://devexpress.github.io/testcafe/example')
   .meta({
     suite: 'Example Fixture Group',
@@ -82,7 +82,7 @@ fixture('TestCafé Example Fixture - Flaky Tests')
 test.meta({
   suite: 'Flaky Test Example Group',
   description:
-    'Does, however, require that TestCafé runs in Quarantine mode, will fail on the first two attempts and succeed on the third.',
+    'Does, however, require that TestCafe runs in Quarantine mode, will fail on the first two attempts and succeed on the third.',
 })('Actual flaky test example', async (t) => {
   // eslint-disable-next-line no-param-reassign
   t.fixtureCtx.flakyVariable += 1;
@@ -100,7 +100,7 @@ test.meta({
     .eql('Thank you, John Smith!');
 });
 
-fixture('TestCafé Example Fixture - Meta Overrides').page('http://devexpress.github.io/testcafe/example').meta({
+fixture('TestCafe Example Fixture - Meta Overrides').page('http://devexpress.github.io/testcafe/example').meta({
   severity: Severity.CRITICAL,
   suite: 'Example Fixture Group',
 });

@@ -1,28 +1,9 @@
 module.exports = {
   branches: ['main'],
-  npmPublish: true,
   ci: true,
   dryRun: false,
   plugins: [
-    // https://github.com/semantic-release/commit-analyzer/
-    [
-      '@semantic-release/commit-analyzer',
-      {
-        preset: 'conventionalcommits',
-        // https://github.com/semantic-release/commit-analyzer/#releaserules
-        // https://github.com/semantic-release/commit-analyzer/blob/master/lib/default-release-rules.js
-        // These rules extend the default rules, uses the Convential Commit types
-        releaseRules: [
-          { type: 'build', release: 'patch' },
-          { type: 'ci', release: 'patch' },
-          { type: 'chore', release: 'patch' },
-          { type: 'docs', release: 'patch' },
-          { type: 'refactor', release: 'patch' },
-          { type: 'style', release: 'patch' },
-          { type: 'test', release: 'patch' },
-        ],
-      },
-    ],
+    ['@semantic-release/commit-analyzer', { preset: 'conventionalcommits' }],
     [
       '@semantic-release/release-notes-generator',
       {
