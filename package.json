@@ -9,7 +9,9 @@
     "allure",
     "reporter"
   ],
-  "main": "dist/index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+
   "scripts": {
     "setup": "yarn install --frozen-lockfile",
     "upgrade:packages": "yarn upgrade-interactive --latest",
