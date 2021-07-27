@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this,array-callback-return */
 import { AllureTest, LinkType, Severity } from 'allure-js-commons';
-import { LabelName, Priority } from './models'; 
+import { LabelName, Priority } from './models';
 import { TestStep } from '../testcafe/step';
 import { loadReporterConfig } from '../utils/config';
 
@@ -11,7 +11,7 @@ export default class Metadata {
 
   priority: Priority;
 
-  description: string = "";
+  description: string = '';
 
   issue: string;
 
@@ -43,9 +43,23 @@ export default class Metadata {
     this.otherMeta = new Map();
     this.links = [];
     if (meta) {
-      const { severity, priority, description, issue, suite, epic, story, feature, flaky, steps, user_story, test_case, ...otherMeta } = meta;
-      
-      //if (this.isValidEnumValue(severity, Severity)) {
+      const {
+        severity,
+        priority,
+        description,
+        issue,
+        suite,
+        epic,
+        story,
+        feature,
+        flaky,
+        steps,
+        user_story,
+        test_case,
+        ...otherMeta
+      } = meta;
+
+      // if (this.isValidEnumValue(severity, Severity)) {
       if (this.isValidEnumValue(severity, Severity)) {
         this.severity = severity;
       }
@@ -81,10 +95,10 @@ export default class Metadata {
       if (steps) {
         this.steps = steps;
       }
-      if(this.isString(user_story)) {
+      if (this.isString(user_story)) {
         this.user_story = user_story;
       }
-      if(this.isString(test_case)) {
+      if (this.isString(test_case)) {
         this.test_case = test_case;
       }
       Object.keys(otherMeta).forEach((key) => {
@@ -140,49 +154,60 @@ export default class Metadata {
     // BDD style notation, containing Epics, Features, and Stories can be added to the tests.
     // These labels work the same way as the suites containing 3 levels. These are in order: Epic -> Feature -> Story
     if (this.epic) {
-      let _epicID = this.epic.match(/\[(.*?)\]/);
+      const _epicID = this.epic.match(/\[(.*?)\]/);
       test.addLabel(LabelName.EPIC, this.epic);
-      if(_epicID)
-        this.addLink(`${reporterConfig.META.JIRA_URL}${_epicID[1]}`, `${reporterConfig.LABEL.EPIC}: ${_epicID[1]}`, "bolt");
+      if (_epicID)
+        this.addLink(
+          `${reporterConfig.META.JIRA_URL}${_epicID[1]}`,
+          `${reporterConfig.LABEL.EPIC}: ${_epicID[1]}`,
+          'bolt',
+        );
     }
     if (this.feature) {
       test.addLabel(LabelName.FEATURE, this.feature);
     }
     if (this.story) {
-      let _usID = this.story.match(/\[(.*?)\]/);
+      const _usID = this.story.match(/\[(.*?)\]/);
       test.addLabel(LabelName.STORY, this.story);
-      if(_usID)
-        this.addLink(`${reporterConfig.META.JIRA_URL}${_usID[1]}`, `${reporterConfig.LABEL.STORY}: ${_usID[1]}`, "bookmark");
+      if (_usID)
+        this.addLink(
+          `${reporterConfig.META.JIRA_URL}${_usID[1]}`,
+          `${reporterConfig.LABEL.STORY}: ${_usID[1]}`,
+          'bookmark',
+        );
     }
 
-    if(!this.story && this.user_story) {
-      this.addLink(`${reporterConfig.META.JIRA_URL}${this.user_story}`, `${reporterConfig.LABEL.STORY}: ${this.user_story}`, "bookmark");
+    if (!this.story && this.user_story) {
+      this.addLink(
+        `${reporterConfig.META.JIRA_URL}${this.user_story}`,
+        `${reporterConfig.LABEL.STORY}: ${this.user_story}`,
+        'bookmark',
+      );
     }
 
     if (this.issue) {
-      (this.issue.split(",")).forEach((issue) => {
+      this.issue.split(',').forEach((issue) => {
         this.addLink(
           `${reporterConfig.META.JIRA_URL}${issue}`,
           `${reporterConfig.LABEL.ISSUE}: ${issue}`,
-          "check-square",
-        )
-      })
-      /*test.addLink(
+          'check-square',
+        );
+      });
+      /* test.addLink(
         `${reporterConfig.META.JIRA_URL}${this.issue}`,
         `${reporterConfig.LABEL.ISSUE}: ${this.issue}`,
         LinkType.TMS,
-      );*/
-    } 
-    
-    if(!this.issue && this.test_case) {
+      ); */
+    }
+
+    if (!this.issue && this.test_case) {
       this.addLink(
         `${reporterConfig.META.JIRA_URL}${this.test_case}`,
         `${reporterConfig.LABEL.ISSUE}: ${this.test_case}`,
-        "check-square",
-      ) 
+        'check-square',
+      );
     }
 
-    
     // Flaky is a boolean, only add to test if flaky is true.
     if (this.flaky) {
       // TODO: Add flaky correctly to allure instead of as a parameter
@@ -192,15 +217,16 @@ export default class Metadata {
 
     if (this.description) {
       /* eslint-disable-next-line no-param-reassign */
-      let newDescription = this.description ? this.description.split("\n").join("<br/>")+ "<br/>" : this.description;
-      newDescription += this.priority ? "<br/><strong>"+ LabelName.PRIORITY +"</strong>: " + ((this.priority) ? this.priority : reporterConfig.META.PRIORITY) : "";
+      let newDescription = this.description ? `${this.description.split('\n').join('<br/>')}<br/>` : this.description;
+      newDescription += this.priority
+        ? `<br/><strong>${LabelName.PRIORITY}</strong>: ${this.priority ? this.priority : reporterConfig.META.PRIORITY}`
+        : '';
       newDescription += "<h3 class='pane__section-title'>Links</h3>";
-      this.links.forEach(link => {
-        newDescription += link + "<br/>";
-      })
+      this.links.forEach((link) => {
+        newDescription += `${link}<br/>`;
+      });
       test.description = newDescription;
     }
-
 
     Array.from(this.otherMeta.entries()).map((entry) => {
       test.addParameter(entry[0], entry[1]);
@@ -211,7 +237,7 @@ export default class Metadata {
     // Local metadata takes preference to merged metadata
     if (!this.severity && metadata.severity) {
       this.severity = metadata.severity;
-    }    
+    }
     if (!this.priority && metadata.priority) {
       this.priority = metadata.priority;
     }
@@ -260,11 +286,11 @@ export default class Metadata {
   }
 
   public addDescription(text: string) {
-    this.description += text
+    this.description += text;
   }
 
   public addLink(url: string, text: string, icon: string) {
-    this.links.push(`<a class='link' href='${url}' target='_blank'><i class='fa fa-${icon}'></i>${' ' + text}</a>`);
+    this.links.push(`<a class='link' href='${url}' target='_blank'><i class='fa fa-${icon}'></i>${` ${text}`}</a>`);
   }
 
   public addOtherMeta(key: string, value: string) {
