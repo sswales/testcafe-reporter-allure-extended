@@ -1,5 +1,6 @@
 module.exports = {
   branches: ['main'],
+  npmPublish: true,
   ci: true,
   dryRun: false,
   plugins: [
