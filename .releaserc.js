@@ -23,8 +23,6 @@ module.exports = {
         ],
       },
     ],
-
-    // https://github.com/semantic-release/release-notes-generator
     [
       '@semantic-release/release-notes-generator',
       {
@@ -43,10 +41,6 @@ module.exports = {
         },
       },
     ],
-
-    // https://github.com/semantic-release/changelog
-    // Must be called before npm and git plugins
-    // Uses the result of the release-notes-generator to generate the CHANGELOG.md.
     [
       '@semantic-release/changelog',
       {
@@ -55,20 +49,14 @@ module.exports = {
           '# Changelog\n\nAll notable changes to this project will be documented in this file. See\n[Conventional Commits](https://conventionalcommits.org) for commit guidelines.',
       },
     ],
-
-    // https://github.com/semantic-release/npm
-    '@semantic-release/npm',
-
-    // https://github.com/semantic-release/git
     [
-      '@semantic-release/git',
+      '@semantic-release/npm',
       {
+        npmPublish: true,
+        tarballDir: 'dist',
         message: 'chore(release): v<%= nextRelease.version %>',
         assets: ['CHANGELOG.md', 'package.json', 'package-lock.json'],
       },
     ],
-
-    // https://github.com/semantic-release/github
-    '@semantic-release/github',
   ],
 };

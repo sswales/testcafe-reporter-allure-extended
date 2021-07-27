@@ -1,21 +1,6 @@
-# testcafe-reporter-allure-plus 
+# testcafe-reporter-allure-extended 
 
-An [Allure](https://allure.qatools.ru/) reporter plugin for [TestCafé](https://devexpress.github.io/testcafe/), based on [Isaac's](https://github.com/isaaceindhoven/testcafe-reporter-allure) modifications.
-
-**Important**: Keep in mind that these modifications are an implementation that suit specifically my use case, required by my client. That's why you will probably see some non-general metatags.
-
-
-## TODO
-
-- [x] Publish package to npm
-- [x] Update config file `allure.config.js` to only have one base URL
-- [x] Add specific metatags `user_story` and `test_case`
-- [x] Generate links for `epic` and `feature` if they are present
-- [x] Generate links for `issue` if present, otherwise use `test_case`
-- [x] Generate links for `story` if present, otherwise use `user_story`
-- [x] Verify is truthy and reliable
-- [x] Research and possibly expand the displayment of errors inside the failed tests - Missing await errors are still ghosting the reporter
-- [ ] Research the posibility of logs as attachments inside steps and tests in general
+An [Allure](https://allure.qatools.ru/) reporter plugin for [TestCafé](https://devexpress.github.io/testcafe/).
 
 ## Documentation
 
@@ -26,7 +11,7 @@ A brief documentation to get up and running with this reporter
 Install with npm:
 
 ````sh
-npm install --save-dev testcafe-reporter-allure-plus
+npm install --save-dev testcafe-reporter-allure-extended
 ````
 
 ### Configuration
@@ -36,7 +21,7 @@ npm install --save-dev testcafe-reporter-allure-plus
 When you run tests from the command-line, specify the reporter name by using the `--reporter` flag:
 
 ```console
-testcafe chrome 'path/to/test/file.js' --reporter allure-plus
+testcafe chrome 'path/to/test/file.js' --reporter allure-extended
 ```
 
 When you use API, pass the reporter name to the `reporter()` method:
@@ -46,7 +31,7 @@ testCafe
     .createRunner()
     .src('path/to/test/file.js')
     .browsers('chrome')
-    .reporter('allure-plus') // <-
+    .reporter('allure-extended') // <-
     .run();
 ```
 
@@ -56,7 +41,7 @@ When using a general configuration file for TestCafe, use the `reporter` attribu
 {
     ...
     "reporter": {
-        "name": "allure-plus"
+        "name": "allure-extended"
     },
     ...
 }
@@ -64,8 +49,7 @@ When using a general configuration file for TestCafe, use the `reporter` attribu
 
 #### Allure
 
-`testcafe-reporter-allure-plus` as its based on @Isaac's changes, provides a default configuration that can be overriden with the use of `allure.config.js` file, in the root of your directory.
-The defaults for this file (`allure.config.js`) are the following:
+`testcafe-reporter-allure-extended` 
 
 ```js
 module.exports = {
@@ -154,8 +138,6 @@ test.meta({
   // Test Code
 });
 ```
-
-**Important**: Know that `issue`, `epic`, `feature` and `story` can generate links **ONLY** if they have the Jira ID encased in square brackets, for example: `epic: '[EX-00001] Example Epic Ticket'`, will generate a link to `[JIRA_URL]/EX-00001`
 
 ### Steps
 
