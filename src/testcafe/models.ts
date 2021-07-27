@@ -57,7 +57,7 @@ export interface TestError {
   pretty?: string;
   testRunPhase?: string;
   isTestCafeError?: boolean;
-  callsite?: CallSite
+  callsite?: CallSite;
 }
 
 export interface Browser {
