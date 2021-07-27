@@ -13,18 +13,17 @@ import {
 } from 'allure-js-commons';
 import { v4 as uuid } from 'uuid';
 import * as fs from 'fs';
+import stripAnsi from 'strip-ansi';
 import { ErrorObject, Screenshot, TestError, TestRunInfo } from '../testcafe/models';
 import { TestStep } from '../testcafe/step';
 import { loadCategoriesConfig, loadReporterConfig } from '../utils/config';
 import addNewLine from '../utils/utils';
 import Metadata from './metadata';
 import { ErrorConfig } from './models';
-import stripAnsi from 'strip-ansi';
 
 const reporterConfig = loadReporterConfig();
 const categoriesConfig: Category[] = loadCategoriesConfig();
-//const stripAnsi = require("strip-ansi");
-
+// const stripAnsi = require("strip-ansi");
 
 export default class AllureReporter {
   private runtime: AllureRuntime = null;
@@ -90,7 +89,7 @@ export default class AllureReporter {
   }
 
   public endTest(name: string, testRunInfo: TestRunInfo, meta: object, context: any): void {
-    let _this = this;
+    const _this = this;
     let currentTest = this.getCurrentTest(name);
 
     // If no currentTest exists create a new one
@@ -106,22 +105,22 @@ export default class AllureReporter {
     let testMessages: string = '';
     let testDetails: string = '';
 
-    //Adding userAgent to Test
-    currentMetadata.addDescription("<br/><strong>User Agent:</strong> ")
-    testRunInfo.browsers.forEach(browser => {
+    // Adding userAgent to Test
+    currentMetadata.addDescription('<br/><strong>User Agent:</strong> ');
+    testRunInfo.browsers.forEach((browser) => {
       currentMetadata.addDescription(browser.prettyUserAgent);
-      currentMetadata.addOtherMeta("browser", browser.prettyUserAgent);
+      currentMetadata.addOtherMeta('browser', browser.prettyUserAgent);
     });
 
     if (isSkipped) {
       currentTest.status = Status.SKIPPED;
     } else if (hasErrors) {
-      let testErrors: Array<TestError> = [];
-      testRunInfo.errs.forEach(err => {
-        let errorFormatted = context.formatError(err);
-        let error = this.formatErrorObject(stripAnsi(errorFormatted));
-        let tError: TestError = err;
-        tError.title = error.errorName + ": " + error.errorMessage;
+      const testErrors: Array<TestError> = [];
+      testRunInfo.errs.forEach((err) => {
+        const errorFormatted = context.formatError(err);
+        const error = this.formatErrorObject(stripAnsi(errorFormatted));
+        const tError: TestError = err;
+        tError.title = `${error.errorName}: ${error.errorMessage}`;
         tError.pretty = error.pretty;
         testErrors.push(tError);
       });
@@ -132,10 +131,10 @@ export default class AllureReporter {
 
       mergedErrors.forEach((error: TestError) => {
         if (error.title) {
-          testMessages = addNewLine(testMessages, error.code ? error.code + " - " + error.title : error.title);
+          testMessages = addNewLine(testMessages, error.code ? `${error.code} - ${error.title}` : error.title);
         }
 
-        if(error.pretty) {
+        if (error.pretty) {
           testDetails = addNewLine(testDetails, error.pretty);
         } else {
           if (error.callsite) {
@@ -155,13 +154,12 @@ export default class AllureReporter {
       currentTest.status = Status.PASSED;
     }
 
-    //if (hasWarnings) {
-      testRunInfo.warnings.forEach((warning: string) => {
-        testMessages = addNewLine(testMessages, warning);
-      });
-    //}
+    // if (hasWarnings) {
+    testRunInfo.warnings.forEach((warning: string) => {
+      testMessages = addNewLine(testMessages, warning);
+    });
+    // }
 
-    
     if (testRunInfo.unstable) {
       currentMetadata.setFlaky();
     }
@@ -304,20 +302,20 @@ export default class AllureReporter {
   }
 
   private formatErrorObject(errorText: string) {
-    let errorMessage = "";
-    let errorName = "";
+    let errorMessage = '';
+    let errorName = '';
 
-    if(errorText.indexOf(ErrorConfig.ASSERTION_ERROR) !== -1) {
+    if (errorText.indexOf(ErrorConfig.ASSERTION_ERROR) !== -1) {
       errorName = ErrorConfig.ASSERTION_ERROR;
-      errorMessage = errorText.substring(ErrorConfig.ASSERTION_ERROR.length + 2, errorText.indexOf("\n\n"));
-    } else if(errorText.indexOf(ErrorConfig.BEFORE_HOOK) !== -1) {
+      errorMessage = errorText.substring(ErrorConfig.ASSERTION_ERROR.length + 2, errorText.indexOf('\n\n'));
+    } else if (errorText.indexOf(ErrorConfig.BEFORE_HOOK) !== -1) {
       errorName = ErrorConfig.BEFORE_HOOK;
       errorMessage = errorText.substring(ErrorConfig.BEFORE_HOOK.length, errorText.indexOf('\n\n'));
     } else {
       errorName = ErrorConfig.UNHANDLED_EXCEPTION;
-      errorMessage = errorText.substring(0, errorText.indexOf("\n\n"));
+      errorMessage = errorText.substring(0, errorText.indexOf('\n\n'));
     }
-    return { errorName: errorName, errorMessage: errorMessage, pretty: errorText.substring(errorText.indexOf("\n\n"))};
+    return { errorName, errorMessage, pretty: errorText.substring(errorText.indexOf('\n\n')) };
   }
 
   private setCurrentTest(name: string, test: AllureTest): void {
