@@ -1,15 +1,16 @@
 {
   "name": "testcafe-reporter-allure-extended",
+  "type": "module",
   "version": "1.0.0",
   "author": "Shaun Swales <info@swalesconsultancy.co.uk>",
   "license": "MIT",
   "description": "An Allure reporter plugin for TestCafe. Used to generate test reports for e2e-tests.",
   "keywords": [
-    "testcafé",
+    "testcafe",
     "allure",
     "reporter"
   ],
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "setup": "yarn install --frozen-lockfile",
     "upgrade:packages": "yarn upgrade-interactive --latest",

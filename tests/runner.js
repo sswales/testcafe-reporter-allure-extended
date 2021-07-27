@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
-const createTestCafe = require('testcafe');
+import createTestCafe from 'testcafe';
 /* eslint-disable-next-line import/no-unresolved */
-const allureReporter = require('../dist');
-/* eslint-disable-next-line import/no-unresolved */
-const { reporterConfig } = require('../dist/utils');
+import * as allureReporter from '../dist/index.js';
 
 let testcafe = null;
 
@@ -17,16 +15,7 @@ createTestCafe()
       .src(['tests/e2e/*.ts'])
       .browsers(browsers)
       .reporter(allureReporter)
-      .tsConfigPath('tsconfig.test.json')
-      .screenshots({
-        path: reporterConfig.SCREENSHOT_DIR,
-        takeOnFails: true,
-      })
-      .concurrency(reporterConfig.CONCURRENCY)
-      .run({
-        quarantineMode: reporterConfig.ENABLE_QUARANTINE,
-        disableScreenshots: !reporterConfig.ENABLE_SCREENSHOTS,
-      });
+      .tsConfigPath('tsconfig.test.json');
   })
   .then((failed) => {
     testcafe.close();
