@@ -26,3 +26,4 @@ examples/base-implementation/allure/*
 docs/.vuepress/dist
 
 .idea
+.env
