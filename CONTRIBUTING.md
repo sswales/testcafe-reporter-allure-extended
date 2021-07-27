@@ -6,13 +6,13 @@ There are multiple ways you can help improve this package: Reporting bug, sugges
 
 ## Reporting bugs
 
-Before submitting a bug request, please check if this bug has already been reported by checking the existing [issues](https://github.com/isaaceindhoven/testcafe-reporter-allure/labels/bug).
+Before submitting a bug request, please check if this bug has already been reported by checking the existing [issues](https://github.com/sswales/testcafe-reporter-allure-extended/labels/bug).
 
 Please adhere to the Bug Report template provided in the repository when creating a new issue. This will help us with organizing, reproducing, and ultimately solving the bug.
 
 ## Suggesting features
 
-Before submitting a feature suggestion, please check if this feature has already been suggested by checking the existing [issues](https://github.com/isaaceindhoven/testcafe-reporter-allure/labels/feature).
+Before submitting a feature suggestion, please check if this feature has already been suggested by checking the existing [issues](https://github.com/sswales/testcafe-reporter-allure-extended/labels/feature).
 
 Please adhere to the Feature Request template provided in the repository when creating a new issue. This will help us in organizing, prioritizing, and implementing new features. 
 
