@@ -1,6 +1,6 @@
 {
   "name": "testcafe-reporter-allure-extended",
-  "version": "1.0.4",
+  "version": "1.0.3",
   "author": "Shaun Swales",
   "license": "MIT",
   "description": "An Allure reporter plugin for TestCafe. Used to generate test reports for e2e-tests.",
@@ -84,5 +84,9 @@
     "ts-jest": "27.0.4",
     "typescript": "4.3.5",
     "vuepress": "1.8.2"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest"
   }
 }

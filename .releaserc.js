@@ -1,6 +1,7 @@
 module.exports = {
   branches: ['main'],
-  ci: true,
+  repositoryUrl: 'git@github.com:sswales/testcafe-reporter-allure-extended.git',
+  ci: false,
   dryRun: false,
   plugins: [
     ['@semantic-release/commit-analyzer', { preset: 'conventionalcommits' }],
