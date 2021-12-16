@@ -1,5 +1,4 @@
-# @isaac.frontend/testcafe-reporter-allure
-[![GitHub](https://img.shields.io/github/license/sswales/testcafe-reporter-allure)](https://github.com/sswales/testcafe-reporter-allure/blob/master/LICENSE) [![NPM downloads per week](https://img.shields.io/npm/dw/@isaac.frontend/testcafe-reporter-allure)](https://www.npmjs.com/package/@isaac.frontend/testcafe-reporter-allure) [![npm (scoped)](https://img.shields.io/npm/v/@isaac.frontend/testcafe-reporter-allure)](https://www.npmjs.com/package/@isaac.frontend/testcafe-reporter-allure) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+# testcafe-reporter-allure-extended
 
 An [Allure](https://allure.qatools.ru/) reporter plugin for [TestCafe](https://devexpress.github.io/testcafe/).
 
